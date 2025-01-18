@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,5 +16,11 @@ public class AccountService implements IAccountService {
     @Override
     public List<Account> getListAccounts() {
         return acRepository.findAll();
+    }
+
+    @Override
+    public Account findAccountById(int id) {
+        Optional<Account> accountOpt = acRepository.findById(id);
+        return accountOpt.orElse(null);
     }
 }

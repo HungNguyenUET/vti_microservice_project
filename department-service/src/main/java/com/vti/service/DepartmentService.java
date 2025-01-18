@@ -11,6 +11,8 @@ import com.vti.form.DepartmentFilterForm;
 import com.vti.repository.IDepartmentRepository;
 import com.vti.specification.department.DepartmentSpecification;
 
+import java.util.Optional;
+
 @Service
 public class DepartmentService implements IDepartmentService {
 
@@ -24,8 +26,9 @@ public class DepartmentService implements IDepartmentService {
 	}
 
 	@Override
-	public Department getDepartmentByID(int id) {
-		return repository.findById(id).isPresent()? repository.findById(id).get() : null;
-	}
+	public Department getDepartmentById(int id) {
+		Optional<Department> departmentOpt = repository.findById(id);
+        return departmentOpt.orElseGet(() -> repository.findById(id).isPresent() ? repository.findById(id).get() : null);
+    }
 
 }

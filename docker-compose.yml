@@ -53,6 +53,7 @@ services:
     depends_on:
       - mysql
       - eureka-server
+      - config-service
     networks:
       - spring-microservice
     environment:
@@ -71,6 +72,7 @@ services:
     depends_on:
       - mysql
       - eureka-server
+      - config-service
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservice?createDatabaseIfNotExist=true&characterEncoding=UTF-8&serverTimeZone=UTC
       SPRING_DATASOURCE_USERNAME: hungnv
@@ -108,12 +110,11 @@ services:
       - "8762:8762"
     depends_on:
       - eureka-server
+      - config-service
     networks:
       - spring-microservice
     environment:
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka-server:8761/eureka/
-
-
 
 networks:
   spring-microservice:

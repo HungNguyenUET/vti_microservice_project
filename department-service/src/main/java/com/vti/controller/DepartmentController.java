@@ -2,7 +2,6 @@ package com.vti.controller;
 
 import java.util.List;
 
-import com.vti.service.DepartmentService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +46,9 @@ public class DepartmentController {
 
 	@GetMapping(value = "/{id}")
 	public DepartmentDTO getDepartmentByID(@PathVariable(name = "id") int id) {
-		Department entity = service.getDepartmentByID(id);
+		Department department = service.getDepartmentById(id);
 
 		// convert entity to dto
-		DepartmentDTO dto = modelMapper.map(entity, DepartmentDTO.class);
-
-		return dto;
+		return modelMapper.map(department, DepartmentDTO.class);
 	}
 }
