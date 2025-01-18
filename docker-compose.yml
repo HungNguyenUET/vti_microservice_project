@@ -62,6 +62,26 @@ services:
       SPRING_DATASOURCE_PASSWORD: 123abc
       SPRING_APPLICATION_NAME: department-service
 
+  department-service-1:
+    container_name: department-service-1
+    build:
+      context: ./department-service
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    depends_on:
+      - mysql
+      - eureka-server
+      - config-service
+    networks:
+      - spring-microservice
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/microservice?createDatabaseIfNotExist=true&characterEncoding=UTF-8&serverTimeZone=UTC
+      SPRING_DATASOURCE_USERNAME: hungnv
+      SPRING_DATASOURCE_PASSWORD: 123abc
+      SPRING_APPLICATION_NAME: department-service
+
   account-service:
     build:
       context: ./account-service
