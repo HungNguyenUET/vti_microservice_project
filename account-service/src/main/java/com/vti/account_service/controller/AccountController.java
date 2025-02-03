@@ -5,6 +5,7 @@ import com.vti.account_service.dto.DepartmentDTO;
 import com.vti.account_service.entity.Account;
 import com.vti.account_service.feignclient.DepartmentFeignClient;
 import com.vti.account_service.service.IAccountService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -47,13 +48,18 @@ public class AccountController {
         return greetingText;
     }
 
+    @CircuitBreaker(name = "departmentService", fallbackMethod = "fallbackNotCallDepartmentService")
     @GetMapping("/{id}")
     public DepartmentDTO getDepartmentByAccountId(@PathVariable final int id) {
         Account account = acService.findAccountById(id);
         int departmentId = account.getDepartment().getId();
-//        DepartmentDTO departmentDTO = restTemplate.getForObject("http://localhost:8080/api/v1/departments/" + departmentId, DepartmentDTO.class);
-        DepartmentDTO departmentDTO = departmentFeignClient.getDepartmentById(departmentId);
+        DepartmentDTO departmentDTO = restTemplate.getForObject("http://localhost:8080/api/v1/departments/" + departmentId, DepartmentDTO.class);
+//        DepartmentDTO departmentDTO = departmentFeignClient.getDepartmentById(departmentId);
         log.info("Department DTO: {}", departmentDTO);
         return departmentDTO;
+    }
+
+    public String fallbackNotCallDepartmentService(int id, Throwable throwable) {
+        return "Department Services Down";
     }
 }
