@@ -23,4 +23,9 @@ public class AccountService implements IAccountService {
         Optional<Account> accountOpt = acRepository.findById(id);
         return accountOpt.orElse(null);
     }
+
+    @Override
+    public Account createAccount(Account account) {
+        return acRepository.save(account);
+    }
 }

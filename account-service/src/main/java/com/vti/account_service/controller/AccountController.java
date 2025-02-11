@@ -1,7 +1,9 @@
 package com.vti.account_service.controller;
 
 import com.vti.account_service.dto.AccountDTO;
+import com.vti.account_service.dto.AccountRequestDTO;
 import com.vti.account_service.dto.DepartmentDTO;
+import com.vti.account_service.dto.ResponseAPIDTO;
 import com.vti.account_service.entity.Account;
 import com.vti.account_service.feignclient.DepartmentFeignClient;
 import com.vti.account_service.service.IAccountService;
@@ -11,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -61,5 +60,15 @@ public class AccountController {
 
     public String fallbackNotCallDepartmentService(int id, Throwable throwable) {
         return "Department Services Down";
+    }
+
+    @PostMapping
+    public ResponseAPIDTO<AccountDTO> createAccount(@RequestBody AccountRequestDTO acRequestDTO) {
+        Account account = modelMapper.map(acRequestDTO, Account.class);
+        Account ac = acService.createAccount(account);
+
+        return ResponseAPIDTO.<AccountDTO>builder()
+                .result(modelMapper.map(ac, AccountDTO.class))
+                .build();
     }
 }
